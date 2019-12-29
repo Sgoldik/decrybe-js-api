@@ -1,6 +1,7 @@
 const {broadcast, waitForTx, invokeScript} = require('@waves/waves-transactions');
 const dAppAddress = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
 //let seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
+let nodeUrl = "https://testnodes.wavesnodes.com"
 
 
 
@@ -111,7 +112,6 @@ let signUp = async (data, nodeUrl, seed) => {
                     }
                 ]
             },
-            payment: [],
             chainId: "T"
         }, seed)
         let tx = await broadcast(ts, nodeUrl);
@@ -120,7 +120,7 @@ let signUp = async (data, nodeUrl, seed) => {
         console.log(e)
     }
 }
-
+let seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
 // signUp(dataU, "https://testnodes.wavesnodes.com", "")
 
 /**
