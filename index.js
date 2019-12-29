@@ -63,28 +63,32 @@ let CryptoJS = require("crypto-js");
  * @param data - data object
  * @param nodeUrl - node url
  */
-let createTask = async (item, expiration, data, nodeUrl) => {
-    let ts = await invokeScript({
-        dApp: dAppAddress,
-        call: {
-            function: "createTask",
-            args: [
-                {
-                    type: "string", value: item
-                },
-                {
-                    type: "integer", value: expiration
-                },
-                {
-                    type: "string", value: JSON.stringify(data)
-                },
-            ]
-        },
-        payment: [{assetId: null, amount: data.price + data.price*0.02}],
-        chainId: "T"
-    }, seed)
-    let tx = await broadcast(ts, nodeUrl);
-    console.log(tx.id)  
+let createTask = async (item, expiration, data, nodeUrl, seed) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "createTask",
+                args: [
+                    {
+                        type: "string", value: item
+                    },
+                    {
+                        type: "integer", value: expiration
+                    },
+                    {
+                        type: "string", value: JSON.stringify(data)
+                    },
+                ]
+            },
+            payment: [{assetId: null, amount: data.price + data.price*0.02}],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 // createTask(test, 30000, data, "https://testnodes.wavesnodes.com")
@@ -95,22 +99,26 @@ let createTask = async (item, expiration, data, nodeUrl) => {
  * @param nodeUrl - node url
  * @param type - user type (mod, registered, admin, etc)
  */
-let signUp = async (data, nodeUrl) => {
-    let ts = await invokeScript({
-        dApp: dAppAddress,
-        call: {
-            function: "signUp",
-            args: [
-                {
-                    type: "string", value: JSON.stringify(data)
-                }
-            ]
-        },
-        payment: [],
-        chainId: "T"
-    }, seed)
-    let tx = await broadcast(ts, nodeUrl);
-    console.log(tx.id)  
+let signUp = async (data, nodeUrl, seed) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "signUp",
+                args: [
+                    {
+                        type: "string", value: JSON.stringify(data)
+                    }
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)  
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 // signUp(dataU, "https://testnodes.wavesnodes.com", "")
@@ -120,30 +128,35 @@ let signUp = async (data, nodeUrl) => {
  * @param taskId - task UUID
  * @param data - object
  * @param nodeUrl - node url
+ * @param seed - seed
  * @param type - allow types: featured (default), inprogress, closed
  */
-let taskUpdate = async (taskId, data, nodeUrl, type = "featured") => {
-    let ts = await invokeScript({
-        dApp: dAppAddress,
-        call: {
-            function: "taskUpdate",
-            args: [
-                {
-                    type: "string", value: taskId
-                },
-                {
-                    type: "string", value: JSON.stringify(data)
-                },
-                {
-                    type: "string", value: type
-                },
-            ]
-        },
-        payment: [],
-        chainId: "T"
-    }, seed)
-    let tx = await broadcast(ts, nodeUrl);
-    console.log(tx.id)    
+let taskUpdate = async (taskId, data, nodeUrl, seed, type = "featured") => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "taskUpdate",
+                args: [
+                    {
+                        type: "string", value: taskId
+                    },
+                    {
+                        type: "string", value: JSON.stringify(data)
+                    },
+                    {
+                        type: "string", value: type
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)    
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 // taskUpdate("fbe5dd88-68bf-41d5-a60e-114c89b4371b", dataUpd, "https://testnodes.wavesnodes.com")
@@ -155,87 +168,103 @@ let taskUpdate = async (taskId, data, nodeUrl, type = "featured") => {
  * @param nodeUrl - node url
  */
 let userUpdate = async (user, data, nodeUrl) => {
-    let ts = await invokeScript({
-        dApp: dAppAddress,
-        call: {
-            function: "userUpdate",
-            args: [
-                {
-                    type: "string", value: user
-                },
-                {
-                    type: "string", value: JSON.stringify(data)
-                },
-            ]
-        },
-        payment: [],
-        chainId: "T"
-    }, seed)
-    let tx = await broadcast(ts, nodeUrl);
-    console.log(tx.id)    
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "userUpdate",
+                args: [
+                    {
+                        type: "string", value: user
+                    },
+                    {
+                        type: "string", value: JSON.stringify(data)
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
 }
 
-let hireFreelancer = async (taskId, freelancer, data, nodeUrl) => {
-    let ts = await invokeScript({
-        dApp: dAppAddress,
-        call: {
-            function: "hireFreelancer",
-            args: [
-                {
-                    type: "string", value: taskId
-                },
-                {
-                    type: "string", value: freelancer
-                },
-                {
-                    type: "string", value: JSON.stringify(data)
-                },
-            ]
-        },
-        payment: [],
-        chainId: "T"
-    }, seed)
-    let tx = await broadcast(ts, nodeUrl);
-    console.log(tx.id)    
+let hireFreelancer = async (taskId, freelancer, data, nodeUrl, seed) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "hireFreelancer",
+                args: [
+                    {
+                        type: "string", value: taskId
+                    },
+                    {
+                        type: "string", value: freelancer
+                    },
+                    {
+                        type: "string", value: JSON.stringify(data)
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)  
+    } catch (e) {
+        console.log(e)
+    }  
 }
 
-let reportCompleteTask = async (taskId, nodeUrl) => {
-    let ts = await invokeScript({
-        dApp: dAppAddress,
-        call: {
-            function: "reportCompleteTask",
-            args: [
-                {
-                    type: "string", value: taskId
-                }
-            ]
-        },
-        payment: [],
-        chainId: "T"
-    }, seed)
-    let tx = await broadcast(ts, nodeUrl);
-    console.log(tx.id)    
+let reportCompleteTask = async (taskId, nodeUrl, seed) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "reportCompleteTask",
+                args: [
+                    {
+                        type: "string", value: taskId
+                    }
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)  
+    } catch (e) {
+        console.log(e)
+    }
 }
 
-let acceptWork = async (taskId, complete, nodeUrl) => {
-    let ts = await invokeScript({
-        dApp: dAppAddress,
-        call: {
-            function: "acceptWork",
-            args: [
-                {
-                    type: "string", value: taskId
-                },
-                {
-                    type: "boolean", value: complete
-                }
-            ]
-        },
-        payment: [],
-        chainId: "T"
-    }, seed)
-    let tx = await broadcast(ts, nodeUrl);
-    console.log(tx.id)    
+let acceptWork = async (taskId, complete, nodeUrl, seed) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "acceptWork",
+                args: [
+                    {
+                        type: "string", value: taskId
+                    },
+                    {
+                        type: "boolean", value: complete
+                    }
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 module.exports = {
