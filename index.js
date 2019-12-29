@@ -1,6 +1,6 @@
 const {broadcast, waitForTx, invokeScript} = require('@waves/waves-transactions');
 const dAppAddress = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
-let seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
+//let seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
 
 
 
@@ -167,7 +167,7 @@ let taskUpdate = async (taskId, data, nodeUrl, seed, type = "featured") => {
  * @param data - object
  * @param nodeUrl - node url
  */
-let userUpdate = async (user, data, nodeUrl) => {
+let userUpdate = async (user, data, nodeUrl, seed) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
