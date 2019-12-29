@@ -1,61 +1,5 @@
-const {broadcast, waitForTx, invokeScript} = require('@waves/waves-transactions');
+const {broadcast, invokeScript} = require('@waves/waves-transactions');
 const dAppAddress = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
-//let seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
-let nodeUrl = "https://testnodes.wavesnodes.com"
-
-
-
-let CryptoJS = require("crypto-js");
-
-// Encrypt
-//console.log(ciphertext); 
-// Decrypt
-//let originalText = CryptoJS.AES.decrypt(ciphertext, 'secret key 123').toString(CryptoJS.enc.Utf8)
-
-//console.log(originalText); // 'my message'
-
-// let data = {
-//     title: "Site for the game",
-//     author: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
-//     description: "Site for the game desc",
-//     expireTask: Date.now() + 50000, // Date
-//     price: 200,
-//     tags: ["site", "react"],
-//     contents: "Need site", // Full description
-//     uuid: test, // uuid
-//     createTime: Date.now() // Date
-
-// }
-
-// let dataUpd = {
-//     title: "Site for The Witcher 3: Wild Hunt",
-//     author: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
-//     description: "Site for the game desc",
-//     expireTask: "1570457371253" + 50000, // Date
-//     price: 200,
-//     tags: ["site", "react"],
-//     contents: "The Witcher 3 is riddled with consequential choices, all of which add up to a whopping 36 possible endgame states. Luckily, most of these are small variations of each other; there are, in fact, just three major endings.", // Full description
-//     uuid: "fbe5dd88-68bf-41d5-a60e-114c89b4371b", // uuid
-//     createTime: "1570457371253" // Date
-
-// }
-
-// let dataU = {
-//     name: "Tester",
-//     avatar: "https://wallpapercave.com/wp/wp4180080.jpg",
-//     description: "Coder. Crypto evangelist",
-//     tags: ["tester", "code", "js"],
-//     location: "USA",
-//     socials: {
-//         telegram: "https://t.me/durov",
-//         twitter: "https://twitter.com/durov",
-//         medium: "",
-//         github: ""
-//     },
-//     address: "3N67wqt9Xvvn1Qtgz6KvyEcdmr8AL7EVaQM",
-//     createTime: Date.now()
-
-// }
 
 /**
  * Creates the task
@@ -92,13 +36,11 @@ let createTask = async (item, expiration, data, nodeUrl, seed) => {
     }
 }
 
-// createTask(test, 30000, data, "https://testnodes.wavesnodes.com")
-
 /**
  * User registration
  * @param data - object
  * @param nodeUrl - node url
- * @param type - user type (mod, registered, admin, etc)
+ * @param seed - seed
  */
 let signUp = async (data, nodeUrl, seed) => {
     try {
@@ -120,8 +62,6 @@ let signUp = async (data, nodeUrl, seed) => {
         console.log(e)
     }
 }
-let seed = "melody eye stock ostrich camera talk unlock royal insane pipe step squeeze";
-// signUp(dataU, "https://testnodes.wavesnodes.com", "")
 
 /**
  * Updates the task
@@ -159,24 +99,20 @@ let taskUpdate = async (taskId, data, nodeUrl, seed, type = "featured") => {
     }
 }
 
-// taskUpdate("fbe5dd88-68bf-41d5-a60e-114c89b4371b", dataUpd, "https://testnodes.wavesnodes.com")
-
 /**
  * Updates the user
  * @param taskId - user address
  * @param data - object
  * @param nodeUrl - node url
+ * @param seed - seed
  */
-let userUpdate = async (user, data, nodeUrl, seed) => {
+let userUpdate = async (data, nodeUrl, seed) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
             call: {
                 function: "userUpdate",
                 args: [
-                    {
-                        type: "string", value: user
-                    },
                     {
                         type: "string", value: JSON.stringify(data)
                     },
