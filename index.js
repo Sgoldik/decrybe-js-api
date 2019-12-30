@@ -26,7 +26,7 @@ let createTask = async (item, expiration, data, nodeUrl, seed) => {
                     },
                 ]
             },
-            payment: [{assetId: null, amount: data.price + data.price*0.02}],
+            payment: [{assetId: null, amount: (data.price + data.price*0.02) * 10e7}],
             chainId: "T"
         }, seed)
         let tx = await broadcast(ts, nodeUrl);
