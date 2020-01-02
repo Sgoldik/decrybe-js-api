@@ -9,7 +9,7 @@ const {broadcast, invokeScript} = require('@waves/waves-transactions');
  * @param seed - user seed
  * @param dAppAddress - dApp address
  */
-let createTask = async (uuid, expiration, data, nodeUrl, seed, dAppAddress) => {
+let createTask = async (uuid, expiration, data, nodeUrl, seed, dAppAddress, price) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
@@ -27,7 +27,7 @@ let createTask = async (uuid, expiration, data, nodeUrl, seed, dAppAddress) => {
                     },
                 ]
             },
-            payment: [{assetId: null, amount: (data.price + data.price*0.02) * 10e7}],
+            payment: [{assetId: null, amount: (price + price*0.02) * 10e7}],
             chainId: "T"
         }, seed)
         let tx = await broadcast(ts, nodeUrl);
