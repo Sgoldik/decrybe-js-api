@@ -1,14 +1,15 @@
 const {broadcast, invokeScript} = require('@waves/waves-transactions');
-const dAppAddress = "3N3PDiDHb1AJU8tTXJLcvoDNP29fdGNNWqs";
 
 /**
  * Creates the task
- * @param item - UUID
- * @param expiration - expiration in seconds
+ * @param uuid - UUID
+ * @param expiration - expiration in minutes
  * @param data - data object
  * @param nodeUrl - node url
+ * @param seed - user seed
+ * @param dAppAddress - dApp address
  */
-let createTask = async (item, expiration, data, nodeUrl, seed) => {
+let createTask = async (uuid, expiration, data, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
@@ -16,7 +17,7 @@ let createTask = async (item, expiration, data, nodeUrl, seed) => {
                 function: "createTask",
                 args: [
                     {
-                        type: "string", value: item
+                        type: "string", value: uuid
                     },
                     {
                         type: "integer", value: expiration
@@ -41,8 +42,9 @@ let createTask = async (item, expiration, data, nodeUrl, seed) => {
  * @param data - object
  * @param nodeUrl - node url
  * @param seed - seed
+ * @param dAppAddress - dapp address
  */
-let signUp = async (data, nodeUrl, seed) => {
+let signUp = async (data, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
@@ -69,9 +71,9 @@ let signUp = async (data, nodeUrl, seed) => {
  * @param data - object
  * @param nodeUrl - node url
  * @param seed - seed
- * @param type - allow types: featured (default), inprogress, closed
+ * @param dAppAddress - dapp address
  */
-let taskUpdate = async (taskId, data, nodeUrl, seed, type = "featured") => {
+let taskUpdate = async (taskId, data, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
@@ -83,9 +85,6 @@ let taskUpdate = async (taskId, data, nodeUrl, seed, type = "featured") => {
                     },
                     {
                         type: "string", value: JSON.stringify(data)
-                    },
-                    {
-                        type: "string", value: type
                     },
                 ]
             },
@@ -101,12 +100,12 @@ let taskUpdate = async (taskId, data, nodeUrl, seed, type = "featured") => {
 
 /**
  * Updates the user
- * @param taskId - user address
  * @param data - object
  * @param nodeUrl - node url
  * @param seed - seed
+ * @param dAppAddress - dapp addres
  */
-let userUpdate = async (data, nodeUrl, seed) => {
+let userUpdate = async (data, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
@@ -128,7 +127,15 @@ let userUpdate = async (data, nodeUrl, seed) => {
     }
 }
 
-let hireFreelancer = async (taskId, freelancer, data, nodeUrl, seed) => {
+/**
+ * Hires the freelancer
+ * @param taskId - task uuid
+ * @param freelancer - freelancer address
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let hireFreelancer = async (taskId, freelancer, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
@@ -140,9 +147,6 @@ let hireFreelancer = async (taskId, freelancer, data, nodeUrl, seed) => {
                     },
                     {
                         type: "string", value: freelancer
-                    },
-                    {
-                        type: "string", value: JSON.stringify(data)
                     },
                 ]
             },
@@ -156,7 +160,14 @@ let hireFreelancer = async (taskId, freelancer, data, nodeUrl, seed) => {
     }  
 }
 
-let reportCompleteTask = async (taskId, nodeUrl, seed) => {
+/**
+ * Report complete task
+ * @param taskId - task uuid
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let reportCompleteTask = async (taskId, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
@@ -178,7 +189,15 @@ let reportCompleteTask = async (taskId, nodeUrl, seed) => {
     }
 }
 
-let acceptWork = async (taskId, complete, nodeUrl, seed) => {
+/**
+ * Accept work
+ * @param taskId - task uuid
+ * @param complete - boolean (true/false)
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let acceptWork = async (taskId, complete, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
@@ -203,6 +222,233 @@ let acceptWork = async (taskId, complete, nodeUrl, seed) => {
     }
 }
 
+/**
+ * Move Deadline
+ * @param taskId - task uuid
+ * @param deadline - new block height
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let moveDeadline = async (taskId, deadline, nodeUrl, seed, dAppAddress) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "moveDeadline",
+                args: [
+                    {
+                        type: "string", value: taskId
+                    },
+                    {
+                        type: "integer", value: deadline
+                    }
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Task Vote (task rating)
+ * @param taskId - task uuid
+ * @param vote - positive/negative
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let voteTask = async (taskId, vote, nodeUrl, seed, dAppAddress) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "voteTask",
+                args: [
+                    {
+                        type: "string", value: taskId
+                    },
+                    {
+                        type: "string", value: vote
+                    }
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Report user
+ * @param user - user address
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let reportUser = async (user, nodeUrl, seed, dAppAddress) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "reportUser",
+                args: [
+                    {
+                        type: "string", value: user
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Open task dispute
+ * @param task - task uuid
+ * @param message - dispute message
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let openTaskDispute = async (task, message, nodeUrl, seed, dAppAddress) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "openTaskDispute",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                    {
+                        type: "string", value: message
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Vote task dispute
+ * @param task - task uuid
+ * @param variant - customer/freelancer
+ * @param message - dispute comment
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let voteTaskDispute = async (task, variant, message, nodeUrl, seed, dAppAddress) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "voteTaskDispute",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                    {
+                        type: "string", value: variant
+                    },
+                    {
+                        type: "string", value: message
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Task dispute message (only for freelancer/customer)
+ * @param task - task uuid
+ * @param message - dispute message
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let taskDisputeMessage = async (task, message, nodeUrl, seed, dAppAddress) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "taskDisputeMessage",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                    {
+                        type: "string", value: message
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Cancel task
+ * @param task - task uuid
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let cancelTask = async (task, nodeUrl, seed, dAppAddress) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            call: {
+                function: "cancelTask",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 module.exports = {
     signUp,
     createTask,
@@ -210,7 +456,14 @@ module.exports = {
     userUpdate,
     hireFreelancer,
     reportCompleteTask,
-    acceptWork
+    acceptWork,
+    moveDeadline,
+    voteTask,
+    reportUser,
+    openTaskDispute,
+    voteTaskDispute,
+    taskDisputeMessage,
+    cancelTask
 }
 let mess = "Veloce are offering great discounts to fast bookings made in advance and in fall and winter time."
 //takeTask("fbe2dd88-68bf-41d5-a60e-114c89b4371b", mess, "bitcoin", "https://testnodes.wavesnodes.com")
