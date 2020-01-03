@@ -45,7 +45,7 @@ decrybe.signUp(data, nodeUrl, seed, dAppAddress)
 ### Возможные ошибки:
 - Если юзер уже зарегистрирован, то вернется ошибка **"User already exist"**
 
-## Изменение состояния
+### Изменение состояния
 После вызова функции в хранилище записывается следующее:
 - ключ **bio_{user}** и значение **data**
 - ключ **user_blk_{user}** и значение текущей высоты блоков (height)
@@ -293,7 +293,7 @@ let dAppAddress = "3MzSNsJLeYj6Eh6u2QzJrbByPCySgFoCbWC"
 let taskId = "9cc4e627-2126-41a7-a7ce-e3ca4748c705"
 let seed = "snack wife small wrap answer uncle twin knife citizen sock episode bargain";
 let deadline = 1000000;
-decrybe.acceptWork(taskId, deadline, nodeUrl, seed, dAppAddress)
+decrybe.moveDeadline(taskId, deadline, nodeUrl, seed, dAppAddress)
 ```
 
 ### Возможные ошибки
@@ -304,4 +304,69 @@ decrybe.acceptWork(taskId, deadline, nodeUrl, seed, dAppAddress)
 
 ### Изменение состояния
 - для сообщения с ключом **expiration_block_{taskId}** будет задано новое значение - **deadline**
+
+## voteTask
+Функция для изменения рейтинга задания
+
+### Аргументы функции:
+- taskId - id задания (string)
+- vote - positive или negative (string)
+- nodeUrl - адрес ноды (string)
+- seed - сид юзера, вызывающего функцию (string)
+- dAppAddress - адрес dApp decrybe (string)
+
+### Пример использования:
+```js
+let decrybe = require("decrybe-js-api")
+let nodeUrl = "https://pool.testnet.wavesnodes.com"
+let dAppAddress = "3MzSNsJLeYj6Eh6u2QzJrbByPCySgFoCbWC"
+let taskId = "9cc4e627-2126-41a7-a7ce-e3ca4748c705"
+let seed = "snack wife small wrap answer uncle twin knife citizen sock episode bargain";
+let vote = "freelancer"; // customer
+decrybe.voteTask(taskId, vote, nodeUrl, seed, dAppAddress)
+```
+
+### Возможные ошибки
+- Если вызывающий функцию не зарегистрирован, то **"User not signup"**
+- Если вызывающий функцию - это автор задания, то **"You cannot change the rating of a task"**
+- Если статус задания != **featured**, то **"Now you can’t lower the task rating"**
+- Если вызывающи функцию уже проголосовал, то **"You have already voted"**
+- Если в качестве **vote** используется что-то кроме **negative**/**positive**, то **"Use positive/negative only"**
+
+## Изменение состояния
+Если в качестве **vote** указано **positive**, то:
+- рейтинг задания увеличивается на 1 (ключ task_rating_{taskId}, значение +1)
+- записывается сообщение с ключом **task_vote_{taskId}_{user}** и значением **positive**
+Если в качестве **vote** указано **negative**, то:
+- рейтинг задания уменьшается на 1 (ключ task_rating_{taskId}, значение -1)
+- записывается сообщение с ключом **task_vote_{taskId}_{user}** и значением **negative**
+
+## reportUser
+Функция для репорта юзера
+
+### Аргументы функции:
+- user - адрес юзера (string)
+- nodeUrl - адрес ноды (string)
+- seed - сид юзера, вызывающего функцию (string)
+- dAppAddress - адрес dApp decrybe (string)
+
+### Пример использования:
+```js
+let decrybe = require("decrybe-js-api")
+let nodeUrl = "https://pool.testnet.wavesnodes.com"
+let dAppAddress = "3MzSNsJLeYj6Eh6u2QzJrbByPCySgFoCbWC"
+let user = "3M5zqsJLeYj6Eh6u2QzJrbByPCySgFoCbWC"
+let seed = "snack wife small wrap answer uncle twin knife citizen sock episode bargain";
+decrybe.voteTask(user, nodeUrl, seed, dAppAddress)
+```
+
+### Возможные ошибки
+- Если пользователь, вызывающий функцию не зарегистрирован, то **"You not signup"**
+- Если **user** не зарегистрирован, то **"User not signup"**
+- Если **user** == аккаунту, вызывающему функцию, то **"You can't complain about yourself"**
+- Если пользователь уже репортил этого юзера, то **"You have already voted"**
+
+### Изменение состояния
+- ключ **user_vote_{account}_{user}**, значение **negative**
+- ключ **user_rating_{user}**, значение -- (-1)
 
