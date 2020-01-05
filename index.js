@@ -364,6 +364,7 @@ let voteTaskDispute = async (task, variant, message, nodeUrl, seed, dAppAddress)
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
+            fee: 900000,
             call: {
                 function: "voteTaskDispute",
                 args: [
@@ -400,6 +401,7 @@ let taskDisputeMessage = async (task, message, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
+            fee: 900000,
             call: {
                 function: "taskDisputeMessage",
                 args: [
@@ -432,6 +434,7 @@ let cancelTask = async (task, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
+            fee: 900000,
             call: {
                 function: "cancelTask",
                 args: [
