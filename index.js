@@ -329,6 +329,7 @@ let openTaskDispute = async (task, message, nodeUrl, seed, dAppAddress) => {
     try {
         let ts = await invokeScript({
             dApp: dAppAddress,
+            fee: 900000,
             call: {
                 function: "openTaskDispute",
                 args: [

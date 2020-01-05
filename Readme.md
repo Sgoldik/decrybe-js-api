@@ -357,7 +357,7 @@ let nodeUrl = "https://pool.testnet.wavesnodes.com"
 let dAppAddress = "3MzSNsJLeYj6Eh6u2QzJrbByPCySgFoCbWC"
 let user = "3M5zqsJLeYj6Eh6u2QzJrbByPCySgFoCbWC"
 let seed = "snack wife small wrap answer uncle twin knife citizen sock episode bargain";
-decrybe.voteTask(user, nodeUrl, seed, dAppAddress)
+decrybe.reportUser(user, nodeUrl, seed, dAppAddress)
 ```
 
 ### Возможные ошибки
@@ -368,5 +368,5 @@ decrybe.voteTask(user, nodeUrl, seed, dAppAddress)
 
 ### Изменение состояния
 - ключ **user_vote_{account}_{user}**, значение **negative**
-- ключ **user_rating_{user}**, значение -- (-1)
+- ключ **user_rating_{user}**, значение текущее -1
 
