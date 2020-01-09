@@ -1,6 +1,6 @@
 {
     "name": "decrybe-js-api",
-    "version": "0.1.2",
+    "version": "0.1.4",
     "dependencies": {
         "@waves/waves-transactions": "^3.14.3",
         "@waves/waveskeeper-types": "^0.0.4"

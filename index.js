@@ -337,7 +337,7 @@ let openTaskDispute = async (task, message, nodeUrl, seed, dAppAddress) => {
                         type: "string", value: task
                     },
                     {
-                        type: "string", value: message
+                        type: "string", value: JSON.stringify(message)
                     },
                 ]
             },
@@ -375,7 +375,7 @@ let voteTaskDispute = async (task, variant, message, nodeUrl, seed, dAppAddress)
                         type: "string", value: variant
                     },
                     {
-                        type: "string", value: message
+                        type: "string", value: JSON.stringify(message)
                     },
                 ]
             },
@@ -409,7 +409,7 @@ let taskDisputeMessage = async (task, message, nodeUrl, seed, dAppAddress) => {
                         type: "string", value: task
                     },
                     {
-                        type: "string", value: message
+                        type: "string", value: JSON.stringify(message)
                     },
                 ]
             },
@@ -453,6 +453,72 @@ let cancelTask = async (task, nodeUrl, seed, dAppAddress) => {
     }
 }
 
+/**
+ * Define dispute winner
+ * @param task - task uuid
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let defineDisputeWinner = async (task, nodeUrl, seed, dAppAddress) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            fee: 900000,
+            call: {
+                function: "defineDisputeWinner",
+                args: [
+                    {
+                        type: "string", value: task
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+/**
+ * Define dispute winner
+ * @param task - task uuid
+ * @param nodeUrl - node url
+ * @param seed - seed
+ * @param dAppAddress - dapp addres
+ */
+let leaveUserReview = async (user, task, review, nodeUrl, seed, dAppAddress) => {
+    try {
+        let ts = await invokeScript({
+            dApp: dAppAddress,
+            fee: 900000,
+            call: {
+                function: "leaveUserReview",
+                args: [
+                    {
+                        type: "string", value: user
+                    },
+                    {
+                        type: "string", value: task
+                    },
+                    {
+                        type: "string", value: JSON.stringify(review)
+                    },
+                ]
+            },
+            payment: [],
+            chainId: "T"
+        }, seed)
+        let tx = await broadcast(ts, nodeUrl);
+        console.log(tx.id)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 module.exports = {
     signUp,
     createTask,
@@ -467,7 +533,9 @@ module.exports = {
     openTaskDispute,
     voteTaskDispute,
     taskDisputeMessage,
-    cancelTask
+    cancelTask,
+    defineDisputeWinner,
+    leaveUserReview
 }
 let mess = "Veloce are offering great discounts to fast bookings made in advance and in fall and winter time."
 //takeTask("fbe2dd88-68bf-41d5-a60e-114c89b4371b", mess, "bitcoin", "https://testnodes.wavesnodes.com")
